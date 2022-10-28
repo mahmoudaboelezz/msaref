@@ -26,7 +26,7 @@ class TotalAdmin(admin.ModelAdmin):
     ordering = ('-residual_total','section')
     
 class BandAdmin(admin.ModelAdmin):
-    list_display = ('name', 'section',  'get_total_paid', 'get_total_residual', 'get_total')
+    list_display = ('name','get_total', 'section',  'get_total_paid', 'get_total_residual', )
     list_filter = ('section',)
     search_fields = ('name', 'section')
     list_per_page = 20
