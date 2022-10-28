@@ -1,5 +1,6 @@
 from turtle import update
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -17,40 +18,31 @@ class Band(models.Model):
     def __str__(self):
         return f'{self.name} - {self.section}'
     
-    def get_total_paid(self):
-        total = 0
-        for paid in self.band_elm.all():
-            total += paid.paid_up
-        return total
-    
-    def get_total_residual(self):
-        total = 0
-        for paid in self.band_elm.all():
-            total += paid.residual
-        return total
-    
 class Paid(models.Model):
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    band_elm = models.ForeignKey(Band, on_delete=models.CASCADE, null=True, blank=True, related_name='band_elm')
+    band_elm = models.ForeignKey(Band, on_delete=models.CASCADE, null=True, blank=True)
     price = models.IntegerField()
     residual = models.IntegerField(default=0, blank=True, null=True)
     paid_up = models.IntegerField(default=0)
     done = models.BooleanField(default=False)
     created = models.DateField(auto_now_add=True)
     updated = models.DateField(auto_now=True)
-    
+    by = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     def __str__(self):
         return self.name
     
-    def save(self, *args, **kwargs):
+    def save(self,request, *args, **kwargs):
         self.residual = self.price - self.paid_up
         if self.residual == 0:
             self.done = True
         if self.done == True:
             self.residual = 0
             self.paid_up = self.price
-        # add the paid to the total that have the same section
+        
+        # set user to current user
+        if self.by is None:
+            self.by = self.User
        
         
         
