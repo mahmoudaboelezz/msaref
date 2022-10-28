@@ -26,12 +26,12 @@ class TotalAdmin(admin.ModelAdmin):
     ordering = ('-residual_total','section')
     
 class BandAdmin(admin.ModelAdmin):
-    list_display = ('name', 'section', 'paid_elm', 'get_total_paid', 'get_total_residual')
+    list_display = ('name', 'section', 'paid_elm', 'get_total_paid', 'get_total_residual', 'get_total')
     list_filter = ('section',)
     search_fields = ('name', 'section')
     list_per_page = 20
     ordering = ('section',)
-    readonly_fields = ('get_total_paid','get_total_residual')
+    readonly_fields = ('get_total_paid','get_total_residual', 'get_total')
     
     def get_total_paid(self, obj):
         print(obj)
@@ -42,6 +42,13 @@ class BandAdmin(admin.ModelAdmin):
     
     def get_total_residual(self, obj):
         return obj.get_total_residual()
+    
+    get_total_residual.short_description = 'Total Residual'
+    
+    def get_total(self, obj):
+        return obj.get_total()
+    
+    get_total.short_description = 'Total'
 
 
 

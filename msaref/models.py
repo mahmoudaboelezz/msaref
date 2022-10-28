@@ -29,6 +29,12 @@ class Band(models.Model):
             total += paid.residual
         return total
     
+    def get_total(self):
+        total = 0
+        for paid in self.band_elm.all():
+            total += paid.price
+        return total
+    
 class Paid(models.Model):
     section = models.ForeignKey(Section, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
